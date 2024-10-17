@@ -31,24 +31,24 @@ def create_sequences(features, time_steps, forecast_horizon):
 @app.route('/predict', methods=['POST'])
 def predict():
     # Nhận dữ liệu từ form
-    start_year = int(request.form.get('start_year'))  # Năm bắt đầu
-    end_year = int(request.form.get('end_year'))      # Năm kết thúc
+    start_year = int(request.form.get('start_year'))  
+    end_year = int(request.form.get('end_year'))     
 
     # Đọc dữ liệu từ file data_train.csv
     df = pd.read_csv('data/data_predict.csv')
 
     # Lọc dữ liệu theo năm
-    df['Date'] = pd.to_datetime(df['Date'])  # Đảm bảo cột 'date' là kiểu datetime
+    df['Date'] = pd.to_datetime(df['Date'])  
     df_year = df[(df['Date'].dt.year >= start_year) & (df['Date'].dt.year <= end_year)]
 
     if df_year.empty:
         return jsonify({"error": "No data available for the specified years."}), 404
 
-    # Giả định rằng bạn có các cột cần thiết trong df_year
+    
     features = df_year[["Tân Châu","Châu Đốc","Rạch Giá","Xẻo Rô","Sông Đốc","Gành Hào",
                     "Mỹ Thanh","Bến Trại","An Thuận","Binh Đại","Vàm Kênh","Vũng Tàu","kratie","Tháng","Mùa"]]
     
-    # Lấy giá trị thực tế cho Tân Châu và Châu Đốc
+    
     actual_tan_chau = df_year['Tân Châu'].values
     actual_chau_doc = df_year['Châu Đốc'].values
     # Chuẩn hóa dữ liệu
@@ -56,8 +56,8 @@ def predict():
     features_scaled = scaler.fit_transform(features)
 
     # Tạo các chuỗi dữ liệu đầu vào cho mô hình
-    time_steps = 24  # 1 ngày với dữ liệu giờ
-    forecast_horizon = 24  # Dự đoán 24 giờ liên tiếp
+    time_steps = 24  
+    forecast_horizon = 24  
     X_input = create_sequences(features_scaled, time_steps, forecast_horizon)
 
     # Dự đoán trên dữ liệu đầu vào
