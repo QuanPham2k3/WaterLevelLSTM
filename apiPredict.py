@@ -34,7 +34,6 @@ def predict():
     start_year = int(request.form.get('start_year'))  
     end_year = int(request.form.get('end_year'))     
 
-    # Đọc dữ liệu từ file data_train.csv
     df = pd.read_csv('data/data_predict.csv')
 
     # Lọc dữ liệu theo năm
@@ -67,12 +66,12 @@ def predict():
     y_pred_reshaped = y_pred.reshape(-1, forecast_horizon, 2)
 
     # Lấy giá trị dự đoán cho Tân Châu và Châu Đốc
-    y_pred_tan_chau = y_pred_reshaped[:, :, 0]  # Dự đoán Tân Châu
-    y_pred_chau_doc = y_pred_reshaped[:, :, 1]  # Dự đoán Châu Đốc
+    y_pred_tan_chau = y_pred_reshaped[:, :, 0] 
+    y_pred_chau_doc = y_pred_reshaped[:, :, 1]  
 
     # Chọn giá trị dự đoán đầu tiên từ mỗi chuỗi
-    y_pred_tan_chau_first = y_pred_tan_chau[:, 0]  # Giá trị đầu tiên cho Tân Châu
-    y_pred_chau_doc_first = y_pred_chau_doc[:, 0]  # Giá trị đầu tiên cho Châu Đốc
+    y_pred_tan_chau_first = y_pred_tan_chau[:, 0]  
+    y_pred_chau_doc_first = y_pred_chau_doc[:, 0]  
 
     # Khôi phục giá trị dự đoán về giá trị gốc
     y_pred_tan_chau_original = scaler_tan_chau.inverse_transform(y_pred_tan_chau_first.reshape(-1, 1)).flatten()
